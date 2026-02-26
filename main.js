@@ -42,7 +42,8 @@ function clickBtns() {
       if (
         isNaN(event.target.textContent) &&
         event.target.textContent !== "=" &&
-        event.target.textContent !== "Clear"
+        event.target.textContent !== "Clear" &&
+        b === ""
       ) {
         operator = event.target.textContent;
         isClicked = true;
@@ -52,6 +53,18 @@ function clickBtns() {
       } else if (!isNaN(event.target.textContent) && isClicked === true) {
         b += event.target.textContent;
         display.innerText = b;
+      } else if (
+        b !== "" &&
+        isNaN(event.target.textContent) &&
+        event.target.textContent !== "=" &&
+        event.target.textContent !== "Clear"
+      ) {
+        let wynik = operate(Number(a), Number(b), operator);
+        display.innerText = wynik;
+        a = wynik;
+        b = "";
+        operator = event.target.textContent;
+        isClicked = true;
       }
     });
   }
