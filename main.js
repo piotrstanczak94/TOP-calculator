@@ -34,12 +34,21 @@ function operate(a, b, operator) {
 let a = "";
 let b = "";
 let operator;
+let result;
 let isClicked = false;
+let isResult = false;
 
-function clickBtns() {
+function calculator() {
   for (btn of btns) {
     btn.addEventListener("click", (event) => {
-      if (
+      if (!isNaN(event.target.textContent) && isResult === true) {
+        a = "";
+        b = "";
+        isClicked = false;
+        isResult = false;
+        a += event.target.textContent;
+        display.textContent = a;
+      } else if (
         isNaN(event.target.textContent) &&
         event.target.textContent !== "=" &&
         event.target.textContent !== "Clear" &&
@@ -53,6 +62,9 @@ function clickBtns() {
       } else if (!isNaN(event.target.textContent) && isClicked === true) {
         b += event.target.textContent;
         display.innerText = b;
+      } else if (isResult === true) {
+        a = "";
+        b = "";
       } else if (
         b !== "" &&
         isNaN(event.target.textContent) &&
@@ -60,11 +72,12 @@ function clickBtns() {
         event.target.textContent !== "Clear"
       ) {
         let wynik = operate(Number(a), Number(b), operator);
-        display.innerText = wynik;
-        a = wynik;
+        display.innerText = result;
+        a = result;
         b = "";
         operator = event.target.textContent;
         isClicked = true;
+        isResult = true;
       }
     });
   }
@@ -76,12 +89,28 @@ function clearDisplay() {
   b = "";
   operator = "";
   isClicked = false;
+  isResult = false;
 }
 
-clickBtns();
+calculator();
 clear.addEventListener("click", clearDisplay);
 
-equal.addEventListener("click", () => {
-  let wynik = operate(Number(a), Number(b), operator);
-  display.innerText = wynik;
+equal.addEventListener("click", (event) => {
+  if (b === "0" && operator === "/") {
+    display.innerText = "Do not divide by 0!";
+    a = "";
+    b = "";
+    operator = "";
+    isClicked = false;
+  } else if (a === "" || b === "" || operator === "") {
+    display.innerText = "Write all of the numbers and operator!";
+    a = "";
+    b = "";
+    operator = "";
+    isClicked = false;
+  } else {
+    result = operate(Number(a), Number(b), operator);
+    display.innerText = result;
+    isResult = true;
+  }
 });
